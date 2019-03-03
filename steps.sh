@@ -11,19 +11,19 @@
 # Please follow the steps described in this link here: 
 # https://docs.microsoft.com/en-us/azure/aks/aad-integration
 
-# 1. Create AKS cluster with RBAC configured with AAD
+# 2. Create AKS cluster with RBAC configured with AAD
 
-# 1.1 Create Resource Group
+# 2.1 Create Resource Group
 
 az group create \
-  --name aks-aad-rg \
+  --name aks-aad-rg-1 \
   --location westeurope \
   --subscription "Microsoft Azure Sponsorship"
 
-# 1.2 Create the kubernetes managed cluster
+# 2.2 Create the kubernetes managed cluster
 
 az aks create \
-  --resource-group aks-aad-rg \
+  --resource-group aks-aad-rg-1 \
   --name aks-aad \
   --generate-ssh-keys \
   --aad-server-app-id cbb2efcb-9b3c-4441-b58f-9c6cca37d03b \
@@ -32,16 +32,17 @@ az aks create \
   --aad-tenant-id 72f988bf-0000-0000-0000-2d7cd011db47 \
   --subscription "Microsoft Azure Sponsorship" # optional if you have only 1 Azure subscription
 
-# 2. Connect to AKS cluster
+# 3. Connect to AKS cluster
 
 az aks get-credentials \
-  --resource-group aks-aad-rg \
+  --resource-group aks-aad-rg-1 \
   --name aks-aad \
+  --admin \
   --subscription "Microsoft Azure Sponsorship"
 
 kubectl config current-context
 
-# 3. Create the Role and RoleBinding
+# 4. Create the Role and RoleBinding
 
 kubectl apply -f role.yaml
 
@@ -51,3 +52,19 @@ kubectl apply -f role-binding.yaml
 
 kubectl get rolebindings
 
+# 5. Test
+
+# from another machine
+
+az aks get-credentials \
+  -resource-group aks-aad-rg \
+  -name aks-aad
+
+kubectl get pods
+# open browser to login
+
+kubectl get deployments
+# Error from server (Forbidden)
+
+kubectl get pods --all-namespaces
+# Error from server (Forbidden)

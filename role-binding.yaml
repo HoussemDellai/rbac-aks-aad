@@ -5,9 +5,10 @@ metadata:
   namespace: default # optional
 subjects:
 - kind: User
-  name: "Houssem Dellai" # user1
+  name: "f97fc9ba-ebda-439e-825a-0e25801cb32c" #"Houssem Dellai" #"houssem.dellai@live.com"
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: Role
   name: pod-reader
   apiGroup: rbac.authorization.k8s.io
+
